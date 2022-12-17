@@ -16,8 +16,8 @@ import yaml
 from loguru import logger
 from playwright.sync_api import Page
 from requests import RequestException
-
 from services.utils.toolbox import ToolBox
+
 from .core import GamePool, new_store_explorer
 
 
@@ -119,10 +119,10 @@ class Explorer:
         return self._promotion_detailed
 
     def get_order_history(
-        self,
-        ctx_cookies: typing.List[dict],
-        page: typing.Optional[str] = None,
-        last_create_at: typing.Optional[str] = None,
+            self,
+            ctx_cookies: typing.List[dict],
+            page: typing.Optional[str] = None,
+            last_create_at: typing.Optional[str] = None,
     ) -> typing.Set[str]:
         """获取最近的订单纪录"""
         _kwargs = {
@@ -156,13 +156,13 @@ class Explorer:
 
 class PermissionsHistory:
     def __init__(
-        self,
-        dir_hook: str,
-        ctx_cookies,
-        outdated_interval_order_history: typing.Optional[int] = 86400,
-        outdated_interval_ctx_store: typing.Optional[int] = 259200,
-        path_ctx_store: typing.Optional[str] = "ctx_store.yaml",
-        path_order_history: typing.Optional[str] = "order_history.yaml",
+            self,
+            dir_hook: str,
+            ctx_cookies,
+            outdated_interval_order_history: typing.Optional[int] = 86400,
+            outdated_interval_ctx_store: typing.Optional[int] = 259200,
+            path_ctx_store: typing.Optional[str] = "ctx_store.yaml",
+            path_order_history: typing.Optional[str] = "order_history.yaml",
     ):
         self.dir_hook = dir_hook
         self.ctx_cookies = ctx_cookies
@@ -184,21 +184,7 @@ class PermissionsHistory:
         for path_memory, lifecycle in memory2lifecycle.items():
             if not isfile(path_memory):
                 continue
-            modify_interval = time.time() - getmtime(path_memory)
-            remain_interval = lifecycle - modify_interval
-            if modify_interval >= lifecycle:
-                continue
-            with open(path_memory, "r", encoding="utf8") as file:
-                data = yaml.safe_load(file)
-            with suppress(TypeError, AttributeError):
-                if path_memory == self.path_order_history:
-                    logger.info(f"加载历史订单数据 本地缓存{int(remain_interval / 3600)}小时有效")
-                    self.namespaces = data or self.namespaces
-                elif path_memory == self.path_ctx_store:
-                    logger.info(f"加载历史商城数据 本地缓存{int(remain_interval / 3600)}小时有效")
-                    for game in data["_games"]:
-                        self.game_pool.put(**game)
-                        self.total_free_games += 1
+            continue
 
     def get_ctx_store(self, page: Page):
         # 获取商城免费游戏数据
