@@ -139,3 +139,4 @@ docs/
 .github/workflows/sync_repo.yaml
 docker-compose.yaml
 src/datas
+/config.yaml
